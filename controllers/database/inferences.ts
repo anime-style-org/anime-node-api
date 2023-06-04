@@ -1,21 +1,41 @@
-import { getFirestore, addDoc, collection } from 'firebase/firestore';
-import { FIREBASE_APP } from '../../config.js';
+import {
+  getFirestore,
+  addDoc,
+  collection,
+  query,
+  where,
+  getDocs
+} from 'firebase/firestore';
+import { FIREBASE_APP } from '../../config.ts';
+
+import { InferenceType } from '../../types.ts';
 
 const db = getFirestore(FIREBASE_APP);
 
+interface createInferenceDocumentParams {
+  userId: InferenceType['userId'];
+  jobId: InferenceType['jobId'];
+  modelId: InferenceType['modelId'];
+  bucketUrl: InferenceType['bucketUrl'];
+}
+
+interface getUserInferencesParams {
+  userId: InferenceType['userId'];
+}
+
 export const createInferenceDocument = async ({
-  authId,
+  userId,
   jobId,
   modelId,
   bucketUrl
-}) => {
+}: createInferenceDocumentParams): Promise<{ err: any; response: any }> => {
   try {
     const inferenceDocRef = await addDoc(collection(db, 'inferences'), {
-      userId: authId,
+      userId: userId,
       jobId: jobId,
       modelId: modelId,
       bucketUrl: bucketUrl,
-      timestamp: Date.now()
+      createdAt: Date.now()
     });
 
     return { err: null, response: { inferenceId: inferenceDocRef.id } };
@@ -24,13 +44,15 @@ export const createInferenceDocument = async ({
   }
 };
 
-export const getUserInferences = async ({ authId }) => {
+export const getUserInferences = async ({
+  userId
+}: getUserInferencesParams): Promise<{ err: any; response: any }> => {
   try {
-    let inferences = [];
+    let inferences: any = [];
 
     const inferencesQuery = query(
       collection(db, 'inferences'),
-      where('userId', '==', authId)
+      where('userId', '==', userId)
     );
 
     const inferencesQuerySnapshot = await getDocs(inferencesQuery);

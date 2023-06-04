@@ -2,7 +2,7 @@
   "type": "module",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "npx nodemon"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.341.0",
@@ -10,10 +10,17 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "express-fileupload": "^1.4.0",
     "firebase": "^9.22.1",
     "jsonwebtoken": "^9.0.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.22"
+    "@types/cors": "^2.8.13",
+    "@types/express": "^4.17.17",
+    "@types/express-fileupload": "^1.4.1",
+    "@types/jsonwebtoken": "^9.0.2",
+    "nodemon": "^2.0.22",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.3"
   }
 }
